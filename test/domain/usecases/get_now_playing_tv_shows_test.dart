@@ -11,7 +11,7 @@ void main() {
   late MockTVShowRepository mockTVShowRepository;
   setUp(() {
     mockTVShowRepository = MockTVShowRepository();
-    usecase = GetNowPlayingTVShows(repository: mockTVShowRepository);
+    usecase = GetNowPlayingTVShows(mockTVShowRepository);
   });
 
   final testTVShow = <TVShow>[];

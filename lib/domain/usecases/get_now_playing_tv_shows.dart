@@ -6,7 +6,7 @@ import 'package:ditonton/domain/repositories/tv_show_repositiry.dart';
 class GetNowPlayingTVShows {
   TVShowRepository repository;
 
-  GetNowPlayingTVShows({required this.repository});
+  GetNowPlayingTVShows(this.repository);
 
   Future<Either<Failure, List<TVShow>>> execute() {
     return repository.getNowPlayingTVShows();
