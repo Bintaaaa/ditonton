@@ -1,5 +1,6 @@
 import 'package:ditonton/data/models/movie_table.dart';
 import 'package:ditonton/data/models/tv_show_model.dart';
+import 'package:ditonton/data/models/tv_show_response.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
@@ -84,3 +85,5 @@ final testTVShowModelList = <TVShowModel>[testTVShowModel];
 final testTVShow = testTVShowModel.toEntity();
 
 final testTVShowList = <TVShow>[testTVShow];
+
+final testTVShowResponse = TVShowResponse(tvShowList: testTVShowModelList);
