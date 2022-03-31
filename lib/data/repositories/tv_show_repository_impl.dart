@@ -5,6 +5,7 @@ import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/common/failure.dart';
 import 'package:dartz/dartz.dart';
+import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:ditonton/domain/repositories/tv_show_repositiry.dart';
 
 class TVShowRepositoryImpl implements TVShowRepository {
@@ -17,6 +18,18 @@ class TVShowRepositoryImpl implements TVShowRepository {
     try {
       final result = await remoteDataSource.getNowPlayingTVShows();
       return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure(''));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TVShowDetail>> getTVShowDetail(int id) async {
+    try {
+      final result = await remoteDataSource.getTVShowDetail(id);
+      return Right(result.toEntity());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
