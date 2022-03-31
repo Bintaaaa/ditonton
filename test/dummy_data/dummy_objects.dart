@@ -1,4 +1,7 @@
+import 'package:ditonton/data/models/genre_model.dart';
 import 'package:ditonton/data/models/movie_table.dart';
+import 'package:ditonton/data/models/season_model.dart';
+import 'package:ditonton/data/models/tv_show_detail_model.dart';
 import 'package:ditonton/data/models/tv_show_model.dart';
 import 'package:ditonton/data/models/tv_show_response.dart';
 import 'package:ditonton/domain/entities/genre.dart';
@@ -87,3 +90,78 @@ final testTVShow = testTVShowModel.toEntity();
 final testTVShowList = <TVShow>[testTVShow];
 
 final testTVShowResponse = TVShowResponse(tvShowList: testTVShowModelList);
+
+final testTVShowDetailResponse = TVShowDetailModel(
+  backdropPath: '',
+  firstAirDate: '',
+  genres: [GenreModel(id: 1, name: 'Action')],
+  id: 2,
+  episodeRunTime: [],
+  homepage: "https://google.com",
+  numberOfEpisodes: 34,
+  name: 'name',
+  numberOfSeasons: 2,
+  originalLanguage: 'en',
+  originalName: 'name',
+  overview: 'overview',
+  popularity: 12.323,
+  posterPath: '',
+  seasons: [
+    SeasonModel(
+      airDate: '',
+      episodeCount: 7,
+      id: 1,
+      name: 'Winter',
+      overview: 'overview',
+      posterPath: 'posterPath',
+      seasonNumber: 2,
+    )
+  ],
+  status: 'status',
+  tagline: 'tagline',
+  type: 'Scripted',
+  voteAverage: 3,
+  voteCount: 3,
+);
+final testTVShowDetailResponseEntity = testTVShowDetailResponse.toEntity();
+
+final testTVShowDetail = TVShowDetailModel(
+  popularity: 1,
+  posterPath: 'posterPath',
+  name: 'name',
+  type: 'type',
+  numberOfEpisodes: 1,
+  numberOfSeasons: 1,
+  seasons: [],
+  episodeRunTime: [1],
+  firstAirDate: 'firstAirDate',
+  genres: [],
+  id: 1,
+  overview: 'overview',
+  voteCount: 1,
+  tagline: 'tagline',
+  originalName: 'originalName',
+  homepage: 'homepage',
+  voteAverage: 1,
+  originalLanguage: 'originalLanguage',
+  backdropPath: 'backdropPath',
+  status: 'status',
+);
+
+final testTVShowDetailEntity = testTVShowDetail.toEntity();
+final testTVShowMap = testTVShowDetail.toJson();
+
+//seasons
+final testSeasonModel = SeasonModel(
+  id: 1,
+  name: 'season',
+  posterPath: 'poster',
+  episodeCount: 2,
+  seasonNumber: 2,
+  airDate: '',
+  overview: '',
+);
+
+final testSeason = testSeasonModel.toEntity();
+
+final testSeasonMap = testSeasonModel.toJson();
