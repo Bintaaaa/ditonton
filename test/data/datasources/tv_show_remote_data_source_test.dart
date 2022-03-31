@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
+import 'package:ditonton/data/models/tv_show_detail_model.dart';
 import 'package:ditonton/data/models/tv_show_response.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -51,6 +52,39 @@ void main() {
       // act
       final call = dataSourceImpl.getNowPlayingTVShows();
       // assert
+      expect(() => call, throwsA(isA<ServerException>()));
+    });
+  });
+
+  group('Get TV Show Detail', () {
+    final tId = 2;
+    final testTVDetail = TVShowDetailModel.fromJson(
+        json.decode(readJson('dummy_data/tv_show_detail.json')));
+    test('should be return tv show detail when the response code is 200',
+        () async {
+      //arrage
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/$tId?$API_KEY')))
+          .thenAnswer((_) async => http.Response(
+                  readJson('dummy_data/tv_show_detail.json'), 200,
+                  headers: {
+                    HttpHeaders.contentTypeHeader:
+                        'application/json; charset=utf-8',
+                  }));
+      //act
+      final result = await dataSourceImpl.getTVShowDetail(tId);
+      //assert
+      expect(result, equals(testTVDetail));
+    });
+
+    test(
+        'should throw a ServerException when the response code is 404 or other',
+        () async {
+      //arrage
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/$tId?$API_KEY')))
+          .thenAnswer((_) async => http.Response('Not Found', 404));
+      //act
+      final call = dataSourceImpl.getTVShowDetail(tId);
+      //assert
       expect(() => call, throwsA(isA<ServerException>()));
     });
   });
