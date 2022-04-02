@@ -60,7 +60,6 @@ class DetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         CachedNetworkImage(
@@ -146,7 +145,6 @@ class DetailContent extends StatelessWidget {
                                   : "-",
                             ),
                             SizedBox(height: 16),
-                            SizedBox(height: 16),
                             Text(
                               'Recommendations',
                               style: kHeading6,
@@ -200,6 +198,82 @@ class DetailContent extends StatelessWidget {
                                     ),
                                   )
                                 : Text('No recommendations found'),
+                            SizedBox(height: 16),
+                            Text(
+                              'Seasons',
+                              style: kHeading6,
+                            ),
+                            tvshow.seasons.isNotEmpty
+                                ? Container(
+                                    height: 150,
+                                    margin: EdgeInsets.only(top: 8.0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (ctx, index) {
+                                        final season = tvshow.seasons[index];
+
+                                        return Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                season.posterPath == null
+                                                    ? Container(
+                                                        width: 96.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: kGrey,
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            'No Image',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    kRichBlack),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : CachedNetworkImage(
+                                                        imageUrl:
+                                                            '$BASE_IMAGE_URL${season.posterPath}',
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Icon(Icons.error),
+                                                      ),
+                                                Positioned.fill(
+                                                  child: Container(
+                                                    color: kRichBlack
+                                                        .withOpacity(0.65),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 8.0,
+                                                  top: 4.0,
+                                                  child: Text(
+                                                    (index + 1).toString(),
+                                                    style: kHeading5.copyWith(
+                                                        fontSize: 26.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      itemCount: tvshow.seasons.length,
+                                    ),
+                                  )
+                                : Text('-'),
+                            SizedBox(height: 16),
                           ],
                         ),
                       ),
