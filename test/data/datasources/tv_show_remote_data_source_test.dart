@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 
+import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
 import '../../json_reader.dart';
 
@@ -116,6 +117,40 @@ void main() {
           .thenAnswer((_) async => http.Response('Not Found', 404));
       // act
       final call = dataSourceImpl.getTVShowRecommendations(tId);
+      // assert
+      expect(() => call, throwsA(isA<ServerException>()));
+    });
+  });
+
+  group('get Popular TVShows', () {
+    final testTVShowList = TVShowResponse.fromJson(
+            json.decode(readJson('dummy_data/popular_tv_shows.json')))
+        .tvShowList;
+
+    test('should return list of tv shows when response is success (200)',
+        () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/popular?$API_KEY')))
+          .thenAnswer((_) async => http.Response(
+                  readJson('dummy_data/popular_tv_shows.json'), 200,
+                  headers: {
+                    HttpHeaders.contentTypeHeader:
+                        'application/json; charset=utf-8',
+                  }));
+      // act
+      final result = await dataSourceImpl.getPopularTVShows();
+      // assert
+      expect(result, testTVShowList);
+    });
+
+    test(
+        'should throw a ServerException when the response code is 404 or other',
+        () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/popular?$API_KEY')))
+          .thenAnswer((_) async => http.Response('Not Found', 404));
+      // act
+      final call = dataSourceImpl.getPopularTVShows();
       // assert
       expect(() => call, throwsA(isA<ServerException>()));
     });
