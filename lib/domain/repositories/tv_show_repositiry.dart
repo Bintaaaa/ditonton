@@ -6,5 +6,6 @@ import 'package:ditonton/domain/entities/tv_show_detail.dart';
 abstract class TVShowRepository {
   Future<Either<Failure, List<TVShow>>> getNowPlayingTVShows();
   Future<Either<Failure, TVShowDetail>> getTVShowDetail(int id);
+  Future<Either<Failure, List<TVShow>>> getPopularTVShows();
   Future<Either<Failure, List<TVShow>>> getTVShowRecommendations(int id);
 }
