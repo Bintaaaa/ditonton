@@ -11,6 +11,7 @@ import 'package:ditonton/domain/usecases/get_movie_recommendations.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_movies.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_tv_shows.dart';
 import 'package:ditonton/domain/usecases/get_popular_movies.dart';
+import 'package:ditonton/domain/usecases/get_popular_tv_shows.dart';
 import 'package:ditonton/domain/usecases/get_top_rated_movies.dart';
 import 'package:ditonton/domain/usecases/get_tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/get_tv_show_recommendations.dart';
@@ -23,6 +24,7 @@ import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
+import 'package:ditonton/presentation/provider/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
@@ -74,11 +76,16 @@ void init() {
 
   //tv
   locator.registerFactory(
-      () => TVShowListNotifier(getNowPlayingTVShows: locator()));
+    () => TVShowListNotifier(
+      getNowPlayingTVShows: locator(),
+      getPopularTVShows: locator(),
+    ),
+  );
   locator.registerFactory(() => TVShowDetailNotifier(
         getTVShowDetail: locator(),
         getTVShowRecommendations: locator(),
       ));
+  locator.registerFactory(() => PopularTVShowsNotifier(locator()));
 
   // use case
   //movie
@@ -96,6 +103,7 @@ void init() {
   locator.registerLazySingleton(() => GetNowPlayingTVShows(locator()));
   locator.registerLazySingleton(() => GetTVShowDetail(locator()));
   locator.registerLazySingleton(() => GetTVShowRecommendations(locator()));
+  locator.registerLazySingleton(() => GetPopularTVShows(locator()));
 
   // repository
   //movie
