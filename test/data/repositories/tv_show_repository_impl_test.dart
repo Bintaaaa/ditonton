@@ -151,4 +151,43 @@ void main() {
           equals(Left(ConnectionFailure('Failed to connect to the network'))));
     });
   });
+
+  group('Popular TV Shows', () {
+    test('should return tv show list when call to data source is success',
+        () async {
+      // arrange
+      when(mockTVShowRemoteDataSource.getPopularTVShows())
+          .thenAnswer((_) async => testTVShowModelList);
+      // act
+      final result = await repositoryImpl.getPopularTVShows();
+      // assert
+      final resultList = result.getOrElse(() => []);
+      expect(resultList, testTVShowList);
+    });
+
+    test(
+        'should return server failure when call to data source is unsuccessful',
+        () async {
+      // arrange
+      when(mockTVShowRemoteDataSource.getPopularTVShows())
+          .thenThrow(ServerException());
+      // act
+      final result = await repositoryImpl.getPopularTVShows();
+      // assert
+      expect(result, Left(ServerFailure('')));
+    });
+
+    test(
+        'should return connection failure when device is not connected to the internet',
+        () async {
+      // arrange
+      when(mockTVShowRemoteDataSource.getPopularTVShows())
+          .thenThrow(SocketException('Failed to connect to the network'));
+      // act
+      final result = await repositoryImpl.getPopularTVShows();
+      // assert
+      expect(
+          result, Left(ConnectionFailure('Failed to connect to the network')));
+    });
+  });
 }
