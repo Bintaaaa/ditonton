@@ -70,7 +70,7 @@ void main() {
       //assert
       expect(provider.tvShowState, RequestState.Loaded);
       expect(provider.tvShowDetail, testTVShowDetailResponseEntity);
-      expect(listenerCallCount, 2);
+      expect(listenerCallCount, 3);
     });
 
     test('should change recommendation movies when data is gotten successfully',
