@@ -8,6 +8,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../dummy_data/dummy_objects.dart';
 import 'popular_movies_page_test.mocks.dart';
 
 @GenerateMocks([PopularMoviesNotifier])
@@ -27,40 +28,53 @@ void main() {
     );
   }
 
-  testWidgets('Page should display center progress bar when loading',
-      (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loading);
+  group('Widget test Popular Movies', () {
+    testWidgets('Page should display center progress bar when loading',
+        (WidgetTester tester) async {
+      when(mockNotifier.state).thenReturn(RequestState.Loading);
 
-    final progressBarFinder = find.byType(CircularProgressIndicator);
-    final centerFinder = find.byType(Center);
+      final progressBarFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+      await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
 
-    expect(centerFinder, findsOneWidget);
-    expect(progressBarFinder, findsOneWidget);
-  });
+      expect(centerFinder, findsOneWidget);
+      expect(progressBarFinder, findsOneWidget);
+    });
 
-  testWidgets('Page should display ListView when data is loaded',
-      (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.movies).thenReturn(<Movie>[]);
+    testWidgets('Page should display AppBar when data is loaded',
+        (WidgetTester tester) async {
+      when(mockNotifier.state).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movies).thenReturn(testMovieList);
 
-    final listViewFinder = find.byType(ListView);
+      await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.text('Popular Movies'), findsOneWidget);
+    });
 
-    expect(listViewFinder, findsOneWidget);
-  });
+    testWidgets('Page should display ListView when data is loaded',
+        (WidgetTester tester) async {
+      when(mockNotifier.state).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movies).thenReturn(<Movie>[]);
 
-  testWidgets('Page should display text with message when Error',
-      (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Error);
-    when(mockNotifier.message).thenReturn('Error message');
+      final listViewFinder = find.byType(ListView);
 
-    final textFinder = find.byKey(Key('error_message'));
+      await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+      expect(listViewFinder, findsOneWidget);
+    });
 
-    expect(textFinder, findsOneWidget);
+    testWidgets('Page should display text with message when Error',
+        (WidgetTester tester) async {
+      when(mockNotifier.state).thenReturn(RequestState.Error);
+      when(mockNotifier.message).thenReturn('Error message');
+
+      final textFinder = find.byKey(Key('error_message'));
+
+      await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+
+      expect(textFinder, findsOneWidget);
+    });
   });
 }
