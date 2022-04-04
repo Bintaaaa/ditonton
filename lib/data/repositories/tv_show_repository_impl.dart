@@ -60,4 +60,16 @@ class TVShowRepositoryImpl implements TVShowRepository {
       return Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<TVShow>>> getTopRatedTVShows() async {
+    try {
+      final result = await remoteDataSource.getTopRatedTVShows();
+      return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure(''));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
 }
