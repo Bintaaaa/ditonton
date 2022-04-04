@@ -190,4 +190,42 @@ void main() {
           result, Left(ConnectionFailure('Failed to connect to the network')));
     });
   });
+
+  group('Get Top rated TV show', () {
+    test('should return tv show list when call to data source is successful',
+        () async {
+      // arrange
+      when(mockTVShowRemoteDataSource.getTopRatedTVShows())
+          .thenAnswer((_) async => testTVShowModelList);
+      // act
+      final result = await repositoryImpl.getTopRatedTVShows();
+      // assert
+      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+      final resultList = result.getOrElse(() => []);
+      expect(resultList, testTVShowList);
+    });
+    test('should return ServerFailure when call to data source is unsuccessful',
+        () async {
+      //arrange
+      when(mockTVShowRemoteDataSource.getTopRatedTVShows())
+          .thenThrow(ServerException());
+      //act
+      final result = await repositoryImpl.getTopRatedTVShows();
+      //assert
+      expect(result, Left(ServerFailure('')));
+    });
+
+    test(
+        'should return ConnectionFailure when device is not connected to the internet',
+        () async {
+      // arrange
+      when(mockTVShowRemoteDataSource.getTopRatedTVShows())
+          .thenThrow(SocketException('Failed to connect to the network'));
+      // act
+      final result = await repositoryImpl.getTopRatedTVShows();
+      // assert
+      expect(
+          result, Left(ConnectionFailure('Failed to connect to the network')));
+    });
+  });
 }
