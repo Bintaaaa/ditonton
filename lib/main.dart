@@ -8,6 +8,7 @@ import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
+import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
@@ -16,6 +17,7 @@ import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
+import 'package:ditonton/presentation/provider/top_rated_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
@@ -59,7 +61,11 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<TVShowDetailNotifier>(),
         ),
         ChangeNotifierProvider(
-            create: (_) => di.locator<PopularTVShowsNotifier>())
+          create: (_) => di.locator<PopularTVShowsNotifier>(),
+        ),
+        ChangeNotifierProvider<TopRatedTVShowsNotifier>(
+          create: (_) => di.locator<TopRatedTVShowsNotifier>(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -73,7 +79,7 @@ class MyApp extends StatelessWidget {
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {
-            case '/home':
+            case HomeMoviePage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => HomeMoviePage());
             case PopularMoviesPage.ROUTE_NAME:
               return CupertinoPageRoute(builder: (_) => PopularMoviesPage());
@@ -99,6 +105,8 @@ class MyApp extends StatelessWidget {
                   builder: (_) => TVShowDetailPage(id: id));
             case PopularTVShowsPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => PopularTVShowsPage());
+            case TopRatedTVShowsPage.ROUTE_NAME:
+              return MaterialPageRoute(builder: (_) => TopRatedTVShowsPage());
             default:
               return MaterialPageRoute(builder: (_) {
                 return Scaffold(
