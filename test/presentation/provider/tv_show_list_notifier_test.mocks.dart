@@ -10,6 +10,7 @@ import 'package:ditonton/domain/entities/tv_show.dart' as _i7;
 import 'package:ditonton/domain/repositories/tv_show_repositiry.dart' as _i2;
 import 'package:ditonton/domain/usecases/get_now_playing_tv_shows.dart' as _i4;
 import 'package:ditonton/domain/usecases/get_popular_tv_shows.dart' as _i8;
+import 'package:ditonton/domain/usecases/get_top_rated_tv_shows.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -57,6 +58,27 @@ class MockGetNowPlayingTVShows extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockGetPopularTVShows extends _i1.Mock implements _i8.GetPopularTVShows {
   MockGetPopularTVShows() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.TVShowRepository get repository =>
+      (super.noSuchMethod(Invocation.getter(#repository),
+          returnValue: _FakeTVShowRepository_0()) as _i2.TVShowRepository);
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, List<_i7.TVShow>>> execute() =>
+      (super.noSuchMethod(Invocation.method(#execute, []),
+          returnValue: Future<_i3.Either<_i6.Failure, List<_i7.TVShow>>>.value(
+              _FakeEither_1<_i6.Failure, List<_i7.TVShow>>())) as _i5
+          .Future<_i3.Either<_i6.Failure, List<_i7.TVShow>>>);
+}
+
+/// A class which mocks [GetTopRatedTVShows].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetTopRatedTVShows extends _i1.Mock
+    implements _i9.GetTopRatedTVShows {
+  MockGetTopRatedTVShows() {
     _i1.throwOnMissingStub(this);
   }
 

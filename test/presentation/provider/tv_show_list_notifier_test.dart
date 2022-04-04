@@ -3,28 +3,33 @@ import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_tv_shows.dart';
 import 'package:ditonton/domain/usecases/get_popular_tv_shows.dart';
+import 'package:ditonton/domain/usecases/get_top_rated_tv_shows.dart';
 import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../dummy_data/dummy_objects.dart';
+import 'movie_list_notifier_test.mocks.dart';
 import 'tv_show_list_notifier_test.mocks.dart';
 
-@GenerateMocks([GetNowPlayingTVShows, GetPopularTVShows])
+@GenerateMocks([GetNowPlayingTVShows, GetPopularTVShows, GetTopRatedTVShows])
 void main() {
   late TVShowListNotifier provider;
   late MockGetNowPlayingTVShows mockGetNowPlayingTVShows;
   late MockGetPopularTVShows mockGetPopularTVShows;
+  late MockGetTopRatedTVShows mockGetTopRatedTVShows;
   late int listenerCallCount;
 
   setUp(() {
     listenerCallCount = 0;
     mockGetNowPlayingTVShows = MockGetNowPlayingTVShows();
     mockGetPopularTVShows = MockGetPopularTVShows();
+    mockGetTopRatedTVShows = MockGetTopRatedTVShows();
     provider = TVShowListNotifier(
       getNowPlayingTVShows: mockGetNowPlayingTVShows,
       getPopularTVShows: mockGetPopularTVShows,
+      getTopRatedTVShows: mockGetTopRatedTVShows,
     )..addListener(() {
         listenerCallCount += 1;
       });
@@ -113,6 +118,43 @@ void main() {
       await provider.fetchPopularTVShows();
       // assert
       expect(provider.popularTVShowsState, RequestState.Error);
+      expect(provider.message, 'Server Failure');
+      expect(listenerCallCount, 2);
+    });
+  });
+
+  group('top rated tv shows', () {
+    test('should change state to loading when usecase is called', () async {
+      // arrange
+      when(mockGetTopRatedTVShows.execute())
+          .thenAnswer((_) async => Right(testTVShowList));
+      // act
+      provider.fetchTopRatedTVShows();
+      // assert
+      expect(provider.topRatedTVState, RequestState.Loading);
+    });
+
+    test('should change movies data when data is gotten successfully',
+        () async {
+      // arrange
+      when(mockGetTopRatedTVShows.execute())
+          .thenAnswer((_) async => Right(testTVShowList));
+      // act
+      await provider.fetchTopRatedTVShows();
+      // assert
+      expect(provider.topRatedTVState, RequestState.Loaded);
+      expect(provider.topRatedTVShows, testTVShowList);
+      expect(listenerCallCount, 2);
+    });
+
+    test('should return error when data is unsuccessful', () async {
+      // arrange
+      when(mockGetTopRatedTVShows.execute())
+          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+      // act
+      await provider.fetchTopRatedTVShows();
+      // assert
+      expect(provider.topRatedTVState, RequestState.Error);
       expect(provider.message, 'Server Failure');
       expect(listenerCallCount, 2);
     });
