@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
+import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/provider/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
@@ -63,7 +64,11 @@ class _HomeTVPageState extends State<HomeTVPage> {
                   return Text('Failed to fetch data');
                 }
               }),
-              _buildSubHeading(title: 'Popular', onTap: () {}),
+              _buildSubHeading(
+                  title: 'Popular',
+                  onTap: () {
+                    Navigator.pushNamed(context, PopularTVShowsPage.ROUTE_NAME);
+                  }),
               Consumer<TVShowListNotifier>(builder: (context, data, child) {
                 final state = data.popularTVShowsState;
                 if (state == RequestState.Loading) {
