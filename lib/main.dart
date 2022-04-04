@@ -5,6 +5,7 @@ import 'package:ditonton/presentation/pages/home_tv_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
+import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
@@ -96,6 +97,8 @@ class MyApp extends StatelessWidget {
               final id = settings.arguments as int;
               return MaterialPageRoute(
                   builder: (_) => TVShowDetailPage(id: id));
+            case PopularTVShowsPage.ROUTE_NAME:
+              return MaterialPageRoute(builder: (_) => PopularTVShowsPage());
             default:
               return MaterialPageRoute(builder: (_) {
                 return Scaffold(
