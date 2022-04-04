@@ -2,6 +2,7 @@ import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_tv_shows.dart';
 import 'package:ditonton/domain/usecases/get_popular_tv_shows.dart';
+import 'package:ditonton/domain/usecases/get_top_rated_tv_shows.dart';
 import 'package:flutter/cupertino.dart';
 
 class TVShowListNotifier extends ChangeNotifier {
@@ -11,20 +12,28 @@ class TVShowListNotifier extends ChangeNotifier {
   var _popularTVShows = <TVShow>[];
   List<TVShow> get popularTVShows => _popularTVShows;
 
+  var _topRatedTVShows = <TVShow>[];
+  List<TVShow> get topRatedTVShows => _topRatedTVShows;
+
   RequestState _nowPlayingState = RequestState.Empty;
   RequestState get nowPlayingState => _nowPlayingState;
 
   RequestState _popularTVShowsState = RequestState.Empty;
   RequestState get popularTVShowsState => _popularTVShowsState;
 
+  RequestState _topRatedTVState = RequestState.Empty;
+  RequestState get topRatedTVState => _topRatedTVState;
+
   String _message = '';
   String get message => _message;
 
   final GetNowPlayingTVShows getNowPlayingTVShows;
   final GetPopularTVShows getPopularTVShows;
+  final GetTopRatedTVShows getTopRatedTVShows;
   TVShowListNotifier({
     required this.getNowPlayingTVShows,
     required this.getPopularTVShows,
+    required this.getTopRatedTVShows,
   });
 
   Future<void> fetchNowPlayingTVShows() async {
@@ -60,5 +69,21 @@ class TVShowListNotifier extends ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  Future<void> fetchTopRatedTVShows() async {
+    _topRatedTVState = RequestState.Loading;
+    notifyListeners();
+
+    final result = await getTopRatedTVShows.execute();
+    result.fold((failure) {
+      _topRatedTVState = RequestState.Error;
+      _message = failure.message;
+      notifyListeners();
+    }, (topRated) {
+      _topRatedTVState = RequestState.Loaded;
+      _topRatedTVShows = topRated;
+      notifyListeners();
+    });
   }
 }

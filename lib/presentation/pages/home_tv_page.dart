@@ -3,6 +3,7 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
+import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/provider/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
@@ -25,7 +26,8 @@ class _HomeTVPageState extends State<HomeTVPage> {
     Future.microtask(
       () => Provider.of<TVShowListNotifier>(context, listen: false)
         ..fetchNowPlayingTVShows()
-        ..fetchPopularTVShows(),
+        ..fetchPopularTVShows()
+        ..fetchTopRatedTVShows(),
     );
   }
 
@@ -77,6 +79,24 @@ class _HomeTVPageState extends State<HomeTVPage> {
                   );
                 } else if (state == RequestState.Loaded) {
                   return TVList(data.popularTVShows);
+                } else {
+                  return Text('Failed');
+                }
+              }),
+              _buildSubHeading(
+                title: 'Top Rated',
+                onTap: () {
+                  Navigator.pushNamed(context, TopRatedTVShowsPage.ROUTE_NAME);
+                },
+              ),
+              Consumer<TVShowListNotifier>(builder: (context, data, child) {
+                final state = data.topRatedTVState;
+                if (state == RequestState.Loading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state == RequestState.Loaded) {
+                  return TVList(data.topRatedTVShows);
                 } else {
                   return Text('Failed');
                 }
