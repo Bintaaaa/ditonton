@@ -261,6 +261,12 @@ class MockTVShowRepository extends _i1.Mock implements _i17.TVShowRepository {
               _FakeEither_0<_i8.Failure, List<_i18.TVShow>>())) as _i7
           .Future<_i2.Either<_i8.Failure, List<_i18.TVShow>>>);
   @override
+  _i7.Future<_i2.Either<_i8.Failure, List<_i18.TVShow>>> getTopRatedTVShows() =>
+      (super.noSuchMethod(Invocation.method(#getTopRatedTVShows, []),
+          returnValue: Future<_i2.Either<_i8.Failure, List<_i18.TVShow>>>.value(
+              _FakeEither_0<_i8.Failure, List<_i18.TVShow>>())) as _i7
+          .Future<_i2.Either<_i8.Failure, List<_i18.TVShow>>>);
+  @override
   _i7.Future<_i2.Either<_i8.Failure, List<_i18.TVShow>>>
       getTVShowRecommendations(int? id) => (super.noSuchMethod(
           Invocation.method(#getTVShowRecommendations, [id]),
@@ -293,6 +299,12 @@ class MockTVShowRemoteDataSource extends _i1.Mock
   @override
   _i7.Future<List<_i21.TVShowModel>> getPopularTVShows() =>
       (super.noSuchMethod(Invocation.method(#getPopularTVShows, []),
+              returnValue:
+                  Future<List<_i21.TVShowModel>>.value(<_i21.TVShowModel>[]))
+          as _i7.Future<List<_i21.TVShowModel>>);
+  @override
+  _i7.Future<List<_i21.TVShowModel>> getTopRatedTVShows() =>
+      (super.noSuchMethod(Invocation.method(#getTopRatedTVShows, []),
               returnValue:
                   Future<List<_i21.TVShowModel>>.value(<_i21.TVShowModel>[]))
           as _i7.Future<List<_i21.TVShowModel>>);
