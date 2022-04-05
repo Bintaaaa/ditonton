@@ -186,4 +186,40 @@ void main() {
       expect(() => call, throwsA(isA<ServerException>()));
     });
   });
+
+  group('search tv shows', () {
+    final tSearchResult = TVShowResponse.fromJson(
+            json.decode(readJson('dummy_data/search_avengers_tv_show.json')))
+        .tvShowList;
+    final tQuery = 'Avengers';
+    test('should be return list of tv shows when response code is 200',
+        () async {
+      //arrage
+      when(mockHttpClient
+              .get(Uri.parse('$BASE_URL/search/tv?$API_KEY&query=$tQuery')))
+          .thenAnswer((_) async => http.Response(
+                  readJson('dummy_data/search_avengers_tv_show.json'), 200,
+                  headers: {
+                    HttpHeaders.contentTypeHeader:
+                        'application/json; charset=utf-8',
+                  }));
+      //act
+      final result = await dataSourceImpl.searchTVShows(tQuery);
+
+      //assert
+      expect(result, tSearchResult);
+    });
+
+    test('should be throw ServerException when response code is other 200',
+        () async {
+      //arrage
+      when(mockHttpClient
+              .get(Uri.parse('$BASE_URL/search/tv?$API_KEY&query=$tQuery')))
+          .thenAnswer((_) async => http.Response('Not Found', 404));
+      //act
+      final call = dataSourceImpl.searchTVShows(tQuery);
+      //assert
+      expect(() => call, throwsA(isA<ServerException>()));
+    });
+  });
 }
