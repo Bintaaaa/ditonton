@@ -3,6 +3,7 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class CardList extends StatelessWidget {
@@ -18,7 +19,9 @@ class CardList extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            MovieDetailPage.ROUTE_NAME,
+            movie == null
+                ? TVShowDetailPage.ROUTE_NAME
+                : MovieDetailPage.ROUTE_NAME,
             arguments: movie == null ? tvShow?.id : movie?.id,
           );
         },
