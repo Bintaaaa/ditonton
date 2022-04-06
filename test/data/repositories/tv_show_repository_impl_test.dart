@@ -12,12 +12,16 @@ import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late TVShowRepositoryImpl repositoryImpl;
+  late MockTVShowLocalDataSource mockLocalDataSource;
   late MockTVShowRemoteDataSource mockTVShowRemoteDataSource;
 
   setUp(() {
     mockTVShowRemoteDataSource = MockTVShowRemoteDataSource();
-    repositoryImpl =
-        TVShowRepositoryImpl(remoteDataSource: mockTVShowRemoteDataSource);
+    mockLocalDataSource = MockTVShowLocalDataSource();
+    repositoryImpl = TVShowRepositoryImpl(
+      remoteDataSource: mockTVShowRemoteDataSource,
+      localDataSource: mockLocalDataSource,
+    );
   });
 
   group("Now Playing TV Shows", () {
@@ -267,6 +271,79 @@ void main() {
       // assert
       expect(
           result, Left(ConnectionFailure('Failed to connect to the network')));
+    });
+  });
+
+  group('save watchlist', () {
+    test('should return success message when saving successful', () async {
+      // arrange
+      when(mockLocalDataSource.insertWatchlist(testTVShowTable))
+          .thenAnswer((_) async => 'Added to Watchlist');
+      // act
+      final result =
+          await repositoryImpl.saveWatchlist(testTVShowDetailResponseEntity);
+      // assert
+      expect(result, Right('Added to Watchlist'));
+    });
+
+    test('should return DatabaseFailure when saving unsuccessful', () async {
+      // arrange
+      when(mockLocalDataSource.insertWatchlist(testTVShowTable))
+          .thenThrow(DatabaseException('Failed to add watchlist'));
+      // act
+      final result =
+          await repositoryImpl.saveWatchlist(testTVShowDetailResponseEntity);
+      // assert
+      expect(result, Left(DatabaseFailure('Failed to add watchlist')));
+    });
+  });
+  group('remove watchlist', () {
+    test('should return success message when remove successful', () async {
+      // arrange
+      when(mockLocalDataSource.removeWatchlist(testTVShowTable))
+          .thenAnswer((_) async => 'Removed from watchlist');
+      // act
+      final result =
+          await repositoryImpl.removeWatchlist(testTVShowDetailResponseEntity);
+      // assert
+      expect(result, Right('Removed from watchlist'));
+    });
+
+    test('should return DatabaseFailure when remove unsuccessful', () async {
+      // arrange
+      when(mockLocalDataSource.removeWatchlist(testTVShowTable))
+          .thenThrow(DatabaseException('Failed to remove watchlist'));
+      // act
+      final result =
+          await repositoryImpl.removeWatchlist(testTVShowDetailResponseEntity);
+      // assert
+      expect(result, Left(DatabaseFailure('Failed to remove watchlist')));
+    });
+  });
+
+  group('get watchlist status', () {
+    test('should return watch status whether data is found', () async {
+      // arrange
+      final tId = 1;
+      when(mockLocalDataSource.getTVShowById(tId))
+          .thenAnswer((_) async => null);
+      // act
+      final result = await repositoryImpl.isAddedToWatchlist(tId);
+      // assert
+      expect(result, false);
+    });
+  });
+
+  group('get watchlist tv shows', () {
+    test('should return list of TV Shows', () async {
+      // arrange
+      when(mockLocalDataSource.getWatchlistTVShows())
+          .thenAnswer((_) async => testTVShowTableList);
+      // act
+      final result = await repositoryImpl.getWatchlistTVShows();
+      // assert
+      final resultList = result.getOrElse(() => []);
+      expect(resultList, testWatchlistTVShow);
     });
   });
 }

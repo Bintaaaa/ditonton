@@ -4,6 +4,7 @@ import 'package:ditonton/data/models/season_model.dart';
 import 'package:ditonton/data/models/tv_show_detail_model.dart';
 import 'package:ditonton/data/models/tv_show_model.dart';
 import 'package:ditonton/data/models/tv_show_response.dart';
+import 'package:ditonton/data/models/tv_shows_table.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
@@ -124,6 +125,19 @@ final testTVShowDetailResponse = TVShowDetailModel(
   voteCount: 3,
 );
 final testTVShowDetailResponseEntity = testTVShowDetailResponse.toEntity();
+
+final testTVShowTable = TVShowTable.fromEntity(testTVShowDetailResponseEntity);
+
+final testTVShowTableList = <TVShowTable>[testTVShowTable];
+
+final testWatchlistTVShow = [testTVShowTable.toEntity()];
+
+final testTVShowMaping = {
+  'id': 1,
+  'overview': 'overview',
+  'posterPath': 'posterPath',
+  'name': 'name',
+};
 
 final testTVShowDetail = TVShowDetailModel(
   popularity: 1,
