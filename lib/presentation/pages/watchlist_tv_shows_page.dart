@@ -1,26 +1,26 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
+import 'package:ditonton/presentation/provider/watchlist_tv_show_notifier.dart';
 import 'package:ditonton/presentation/widgets/card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WatchlistMoviesPage extends StatefulWidget {
-  static const ROUTE_NAME = '/watchlist-movie';
+class WatchlistTVShowsPage extends StatefulWidget {
+  static const ROUTE_NAME = '/watchlist-tv';
 
   @override
-  _WatchlistMoviesPageState createState() => _WatchlistMoviesPageState();
+  _WatchlistTVShowsPageState createState() => _WatchlistTVShowsPageState();
 }
 
-class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
+class _WatchlistTVShowsPageState extends State<WatchlistTVShowsPage>
     with RouteAware {
   @override
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<WatchlistMovieNotifier>(context, listen: false)
-            .fetchWatchlistMovies());
+        Provider.of<WatchlistTVShowNotifier>(context, listen: false)
+            .fetchWatchlistTVShows());
   }
 
   @override
@@ -30,8 +30,8 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
   }
 
   void didPopNext() {
-    Provider.of<WatchlistMovieNotifier>(context, listen: false)
-        .fetchWatchlistMovies();
+    Provider.of<WatchlistTVShowNotifier>(context, listen: false)
+        .fetchWatchlistTVShows();
   }
 
   @override
@@ -39,23 +39,23 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistMovieNotifier>(
+        child: Consumer<WatchlistTVShowNotifier>(
           builder: (context, data, child) {
             if (data.watchlistState == RequestState.Loading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             } else if (data.watchlistState == RequestState.Loaded) {
-              if (data.watchlistMovies.isEmpty)
+              if (data.watchlistTVShows.isEmpty)
                 return Center(
                   child: Text('Add your favorite movie!', style: kBodyText),
                 );
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.watchlistMovies[index];
-                  return CardList(movie: movie);
+                  final tv = data.watchlistTVShows[index];
+                  return CardList(tvShow: tv);
                 },
-                itemCount: data.watchlistMovies.length,
+                itemCount: data.watchlistTVShows.length,
               );
             } else {
               return Center(

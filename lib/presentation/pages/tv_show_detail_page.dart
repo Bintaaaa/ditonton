@@ -22,7 +22,8 @@ class _TVShowDetailPageState extends State<TVShowDetailPage> {
     super.initState();
     Future.microtask(() {
       Provider.of<TVShowDetailNotifier>(context, listen: false)
-          .fetchTVShowDetail(widget.id);
+        ..fetchTVShowDetail(widget.id)
+        ..loadWatchlistStatus(widget.id);
     });
   }
 
@@ -40,6 +41,7 @@ class _TVShowDetailPageState extends State<TVShowDetailPage> {
             return DetailContent(
               tvshow: provider.tvShowDetail,
               provider: provider,
+              isAddedWatchlist: provider.isAddedToWatchlist,
             );
           } else {
             return Center(
@@ -55,7 +57,12 @@ class _TVShowDetailPageState extends State<TVShowDetailPage> {
 class DetailContent extends StatelessWidget {
   final TVShowDetail tvshow;
   final TVShowDetailNotifier provider;
-  const DetailContent({Key? key, required this.tvshow, required this.provider})
+  final bool isAddedWatchlist;
+  const DetailContent(
+      {Key? key,
+      required this.tvshow,
+      required this.provider,
+      required this.isAddedWatchlist})
       : super(key: key);
 
   @override
@@ -94,14 +101,38 @@ class DetailContent extends StatelessWidget {
                               style: kHeading5,
                             ),
                             ElevatedButton(
+                              onPressed: () async {
+                                if (!provider.isAddedToWatchlist) {
+                                  await provider.addWatchlist(tvshow);
+                                } else {
+                                  await provider.removeFromWatchlist(tvshow);
+                                }
+
+                                final message = provider.watchlistMessage;
+
+                                if (message == 'Added to Watchlist' ||
+                                    message == 'Removed from Watchlist') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(message)));
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Text(message),
+                                        );
+                                      });
+                                }
+                              },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.add),
+                                  isAddedWatchlist
+                                      ? Icon(Icons.check)
+                                      : Icon(Icons.add),
                                   Text('Watchlist'),
                                 ],
                               ),
-                              onPressed: () {},
                             ),
                             Text(
                               _showGenres(tvshow.genres),
