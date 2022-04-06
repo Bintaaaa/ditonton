@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
+import 'package:ditonton/data/datasources/tv_show_remote_data_source.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/domain/usecases/get_popular_tv_shows.dart';
 import 'package:flutter_test/flutter_test.dart';
