@@ -30,6 +30,22 @@ class TVShow extends Equatable {
     required this.voteCount,
   });
 
+  TVShow.watchlist({
+    this.backdropPath,
+    this.firstAirDate,
+    this.genreIds,
+    this.originCountry,
+    this.originalLanguage,
+    this.originalName,
+    this.popularity,
+    this.voteAverage,
+    this.voteCount,
+    required this.id,
+    required this.overview,
+    required this.posterPath,
+    required this.name,
+  });
+
   @override
   List<Object?> get props => [
         backdropPath,
