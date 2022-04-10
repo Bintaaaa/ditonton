@@ -1,8 +1,6 @@
 import 'package:ditonton/data/models/tv_show_detail_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../dummy_data/dummy_objects.dart';
-
 void main() {
   final testTVShowResponse = TVShowDetailModel(
     popularity: 1,
