@@ -8,10 +8,10 @@ class OnFetchMovieWatchlist extends WatchlistMoviesEvent {
   List<Object> get props => [];
 }
 
-class FetchWatchlistStatus extends WatchlistMoviesEvent {
+class FetchWatchlistStatusMovies extends WatchlistMoviesEvent {
   final int id;
 
-  FetchWatchlistStatus(this.id);
+  FetchWatchlistStatusMovies(this.id);
 
   @override
   List<Object> get props => [id];
