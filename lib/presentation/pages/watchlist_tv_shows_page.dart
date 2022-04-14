@@ -1,10 +1,9 @@
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/provider/watchlist_tv_show_notifier.dart';
+import 'package:ditonton/presentation/bloc/tv/watchlist_tv_shows/watchlist_tv_shows_bloc.dart';
 import 'package:ditonton/presentation/widgets/card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WatchlistTVShowsPage extends StatefulWidget {
   static const ROUTE_NAME = '/watchlist-tv';
@@ -18,9 +17,9 @@ class _WatchlistTVShowsPageState extends State<WatchlistTVShowsPage>
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistTVShowNotifier>(context, listen: false)
-            .fetchWatchlistTVShows());
+    Future.microtask(() {
+      context.read<WatchlistTVShowsBloc>().add(OnFetchTVShowWatchlist());
+    });
   }
 
   @override
@@ -29,42 +28,45 @@ class _WatchlistTVShowsPageState extends State<WatchlistTVShowsPage>
     routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
+  @override
   void didPopNext() {
-    Provider.of<WatchlistTVShowNotifier>(context, listen: false)
-        .fetchWatchlistTVShows();
+    context.read<WatchlistTVShowsBloc>().add(OnFetchTVShowWatchlist());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistTVShowNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (data.watchlistState == RequestState.Loaded) {
-              if (data.watchlistTVShows.isEmpty)
-                return Center(
-                  child: Text('Add your favorite movie!', style: kBodyText),
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 12.0),
+      child: BlocBuilder<WatchlistTVShowsBloc, WatchlistTVShowsState>(
+        builder: (context, watchlistState) {
+          if (watchlistState is TVShowWatchlistLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (watchlistState is TVShowWatchlistHasData) {
+            final watchlistTVShows = watchlistState.result;
+
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                final tvShow = watchlistTVShows[index];
+
+                return CardList(
+                  tvShow: tvShow,
                 );
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final tv = data.watchlistTVShows[index];
-                  return CardList(tvShow: tv);
-                },
-                itemCount: data.watchlistTVShows.length,
-              );
-            } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
-            }
-          },
-        ),
+              },
+              itemCount: watchlistTVShows.length,
+            );
+          } else if (watchlistState is TVShowWatchlistEmpty) {
+            return Center(
+              child: Text('No watchlist tv show yet!', style: kBodyText),
+            );
+          } else {
+            return const Center(
+              key: Key('error_message'),
+              child: Text('Failed to fetch data'),
+            );
+          }
+        },
       ),
     );
   }

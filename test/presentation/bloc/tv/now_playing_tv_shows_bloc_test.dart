@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../dummy_data/dummy_objects.dart';
-import '../../provider/tv_show_list_notifier_test.mocks.dart';
+import '../../../helpers/tv_show_bloc_test_helpers.mocks.dart';
 
 void main() {
   late MockGetNowPlayingTVShows usecase;

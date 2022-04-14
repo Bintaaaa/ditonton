@@ -15,66 +15,73 @@ class CardList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            movie == null
-                ? TVShowDetailPage.ROUTE_NAME
-                : MovieDetailPage.ROUTE_NAME,
-            arguments: movie == null ? tvShow?.id : movie?.id,
-          );
-        },
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            Card(
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16 + 80 + 16,
-                  bottom: 8,
-                  right: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      (movie == null ? tvShow?.name : movie?.title) ?? '-',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: kHeading6,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      (movie == null ? tvShow?.overview : movie?.overview) ??
-                          '-',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 16,
-                bottom: 16,
-              ),
-              child: ClipRRect(
-                child: CachedNetworkImage(
-                  imageUrl: movie == null
-                      ? '$BASE_IMAGE_URL${tvShow?.posterPath}'
-                      : '$BASE_IMAGE_URL${movie?.posterPath}',
-                  width: 80,
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
+      child: Material(
+        color: kRichBlack,
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              movie == null
+                  ? TVShowDetailPage.ROUTE_NAME
+                  : MovieDetailPage.ROUTE_NAME,
+              arguments: movie == null ? tvShow?.id : movie?.id,
+            );
+          },
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Card(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    left: 16 + 80 + 16,
+                    bottom: 8,
+                    right: 8,
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (movie == null ? tvShow?.name : movie?.title) ?? '-',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: kHeading6,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        (movie == null ? tvShow?.overview : movie?.overview) ??
+                            '-',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-            ),
-          ],
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 16,
+                  bottom: 16,
+                ),
+                child: ClipRRect(
+                  child: CachedNetworkImage(
+                    imageUrl: movie == null
+                        ? '$BASE_IMAGE_URL${tvShow?.posterPath}'
+                        : '$BASE_IMAGE_URL${movie?.posterPath}',
+                    width: 80,
+                    placeholder: (context, url) => const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

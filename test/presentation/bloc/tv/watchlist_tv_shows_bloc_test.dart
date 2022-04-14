@@ -6,8 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../dummy_data/dummy_objects.dart';
-import '../../provider/tv_show_detail_notifier_test.mocks.dart';
-import '../../provider/watchlist_tv_show_notifier_test.mocks.dart';
+import '../../../helpers/tv_show_bloc_test_helpers.mocks.dart';
 
 void main() {
   late MockGetWatchlistTVShows getWatchlistTVShows;
@@ -96,13 +95,13 @@ void main() {
           return watchlistTVShowsBloc;
         },
         act: (bloc) =>
-            bloc.add(FetchWatchlistStatus(testTVShowDetailEntity.id)),
+            bloc.add(FetchWatchlistStatusTVShow(testTVShowDetailEntity.id)),
         expect: () => [
           TVShowIsAddedToWatchlist(true),
         ],
         verify: (bloc) {
           verify(getWatchlistStatus.execute(testTVShowDetailEntity.id));
-          return FetchWatchlistStatus(testTVShowDetailEntity.id).props;
+          return FetchWatchlistStatusTVShow(testTVShowDetailEntity.id).props;
         },
       );
 
@@ -114,13 +113,13 @@ void main() {
           return watchlistTVShowsBloc;
         },
         act: (bloc) =>
-            bloc.add(FetchWatchlistStatus(testTVShowDetailEntity.id)),
+            bloc.add(FetchWatchlistStatusTVShow(testTVShowDetailEntity.id)),
         expect: () => [
           TVShowIsAddedToWatchlist(false),
         ],
         verify: (bloc) {
           verify(getWatchlistStatus.execute(testTVShowDetailEntity.id));
-          return FetchWatchlistStatus(testTVShowDetailEntity.id).props;
+          return FetchWatchlistStatusTVShow(testTVShowDetailEntity.id).props;
         },
       );
     },

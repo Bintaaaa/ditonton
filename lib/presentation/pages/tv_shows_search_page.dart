@@ -1,8 +1,9 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/tv_show_search_notifier.dart';
+import 'package:ditonton/presentation/bloc/tv/search_tv_show/search_tv_shows_bloc.dart';
 import 'package:ditonton/presentation/widgets/card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class SearchTVShowsPage extends StatelessWidget {
@@ -21,8 +22,9 @@ class SearchTVShowsPage extends StatelessWidget {
           children: [
             TextField(
               onSubmitted: (query) {
-                Provider.of<TVShowsSearchNotifier>(context, listen: false)
-                    .fetchTVShowsSearch(query);
+                context
+                    .read<SearchTVShowsBloc>()
+                    .add(OnQueryTVShowsChange(query));
               },
               decoration: InputDecoration(
                 hintText: 'Search title',
@@ -36,33 +38,44 @@ class SearchTVShowsPage extends StatelessWidget {
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<TVShowsSearchNotifier>(
-              builder: (context, data, child) {
-                if (data.state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
+            BlocBuilder<SearchTVShowsBloc, SearchTVShowsState>(
+              key: const Key('search_tv_shows'),
+              builder: (context, state) {
+                if (state is SearchTVShowsLoading) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 32.0),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
-                } else if (data.state == RequestState.Loaded) {
-                  final result = data.searchResult;
+                } else if (state is SearchTVShowsHasData) {
+                  final tvShows = state.result;
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        final tv = data.searchResult[index];
+                        final tv = tvShows[index];
                         return CardList(
                           tvShow: tv,
                         );
                       },
-                      itemCount: result.length,
+                      itemCount: tvShows.length,
+                    ),
+                  );
+                } else if (state is SearchTVShowsEmpty) {
+                  return Container();
+                } else if (state is SearchTVShowsError) {
+                  return Center(
+                    child: Text(
+                      'Movies not found!',
+                      style: kBodyText,
                     ),
                   );
                 } else {
-                  return Expanded(
-                    child: Container(),
-                  );
+                  return Container();
                 }
               },
-            ),
+            )
           ],
         ),
       ),

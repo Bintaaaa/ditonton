@@ -2,14 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
+import 'package:ditonton/presentation/bloc/tv/now_playing_tv_shows/now_playing_tv_shows_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/popular_tv_shows/popular_tv_shows_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/top_rated_tv_shows/top_rated_tv_shows_bloc.dart';
 import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_shows_search_page.dart';
-import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/drawer.dart';
+import 'package:ditonton/presentation/widgets/sub_heading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeTVPage extends StatefulWidget {
   static const ROUTE_NAME = '/home-tv';
@@ -23,12 +26,11 @@ class _HomeTVPageState extends State<HomeTVPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => Provider.of<TVShowListNotifier>(context, listen: false)
-        ..fetchNowPlayingTVShows()
-        ..fetchPopularTVShows()
-        ..fetchTopRatedTVShows(),
-    );
+    Future.microtask(() {
+      context.read<NowPlayingTVShowsBloc>().add(OnNowPlayingTVShowsCalled());
+      context.read<PopularTVShowsBloc>().add(OnPopularTVShowsCalled());
+      context.read<TopRatedTVShowsBloc>().add(OnTopRatedTVShowsCalled());
+    });
   }
 
   @override
@@ -56,53 +58,69 @@ class _HomeTVPageState extends State<HomeTVPage> {
                 "Now Playing",
                 style: kHeading6,
               ),
-              Consumer<TVShowListNotifier>(builder: (context, data, child) {
-                final state = data.nowPlayingState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.nowPlayingTVShows);
-                } else {
-                  return Text('Failed to fetch data');
-                }
-              }),
-              _buildSubHeading(
-                  title: 'Popular',
-                  onTap: () {
-                    Navigator.pushNamed(context, PopularTVShowsPage.ROUTE_NAME);
-                  }),
-              Consumer<TVShowListNotifier>(builder: (context, data, child) {
-                final state = data.popularTVShowsState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.popularTVShows);
-                } else {
-                  return Text('Failed');
-                }
-              }),
-              _buildSubHeading(
-                title: 'Top Rated',
-                onTap: () {
-                  Navigator.pushNamed(context, TopRatedTVShowsPage.ROUTE_NAME);
+              BlocBuilder<NowPlayingTVShowsBloc, NowPlayingTVShowsState>(
+                key: const Key('now_playing_tv_shows'),
+                builder: (context, state) {
+                  if (state is NowPlayingTVShowsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is NowPlayingTVShowsHasData) {
+                    return TVList(state.result);
+                  } else {
+                    return const Text(
+                      'Failed to fetch data',
+                      key: Key('error_message'),
+                    );
+                  }
                 },
               ),
-              Consumer<TVShowListNotifier>(builder: (context, data, child) {
-                final state = data.topRatedTVState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.topRatedTVShows);
-                } else {
-                  return Text('Failed');
-                }
-              }),
+              SubHeading(
+                title: 'Popular',
+                onTap: () =>
+                    Navigator.pushNamed(context, PopularTVShowsPage.ROUTE_NAME),
+              ),
+              BlocBuilder<PopularTVShowsBloc, PopularTVShowsState>(
+                key: const Key('popular_tv_shows'),
+                builder: (context, state) {
+                  if (state is PopularTVShowsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PopularTVShowsHasData) {
+                    return TVList(state.result);
+                  } else {
+                    return const Text(
+                      'Failed to fetch data',
+                      key: Key('error_message'),
+                    );
+                  }
+                },
+              ),
+              SubHeading(
+                title: 'Top Rated',
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  TopRatedTVShowsPage.ROUTE_NAME,
+                ),
+              ),
+              BlocBuilder<TopRatedTVShowsBloc, TopRatedTVShowsState>(
+                key: const Key('top_rated_tv_shows'),
+                builder: (context, state) {
+                  if (state is TopRatedTVShowsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is TopRatedTVShowsHasData) {
+                    return TVList(state.result);
+                  } else {
+                    return const Text(
+                      'Failed to fetch data',
+                      key: Key('error_message'),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),

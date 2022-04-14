@@ -27,7 +27,7 @@ class WatchlistTVShowsBloc
     this._saveWatchlist,
   ) : super(TVShowWatchlistInitial()) {
     on<OnFetchTVShowWatchlist>(_onFetchTVShowWatchlist);
-    on<FetchWatchlistStatus>(_fetchWatchlistStatus);
+    on<FetchWatchlistStatusTVShow>(_fetchWatchlistStatus);
     on<AddTVShowToWatchlist>(_addTVShowToWatchlist);
     on<RemoveTVShowFromWatchlist>(_removeTVShowFromWatchlist);
   }
@@ -53,7 +53,7 @@ class WatchlistTVShowsBloc
   }
 
   FutureOr<void> _fetchWatchlistStatus(
-    FetchWatchlistStatus event,
+    FetchWatchlistStatusTVShow event,
     Emitter<WatchlistTVShowsState> emit,
   ) async {
     final id = event.id;

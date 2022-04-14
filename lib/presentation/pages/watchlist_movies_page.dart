@@ -1,14 +1,14 @@
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:ditonton/presentation/widgets/card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/movie/watchlist_movies/watchlist_movies_bloc.dart';
 
 class WatchlistMoviesPage extends StatefulWidget {
   static const ROUTE_NAME = '/watchlist-movie';
-
+  const WatchlistMoviesPage({Key? key}) : super(key: key);
   @override
   _WatchlistMoviesPageState createState() => _WatchlistMoviesPageState();
 }
@@ -18,9 +18,9 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistMovieNotifier>(context, listen: false)
-            .fetchWatchlistMovies());
+    Future.microtask(() {
+      context.read<WatchlistMoviesBloc>().add(OnFetchMovieWatchlist());
+    });
   }
 
   @override
@@ -29,42 +29,43 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
     routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
+  @override
   void didPopNext() {
-    Provider.of<WatchlistMovieNotifier>(context, listen: false)
-        .fetchWatchlistMovies();
+    context.read<WatchlistMoviesBloc>().add(OnFetchMovieWatchlist());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistMovieNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (data.watchlistState == RequestState.Loaded) {
-              if (data.watchlistMovies.isEmpty)
-                return Center(
-                  child: Text('Add your favorite movie!', style: kBodyText),
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 12.0),
+      child: BlocBuilder<WatchlistMoviesBloc, WatchlistMoviesState>(
+        builder: (context, watchlistState) {
+          if (watchlistState is MovieWatchlistLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (watchlistState is MovieWatchlistHasData) {
+            final watchlistMovies = watchlistState.result;
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                final movie = watchlistMovies[index];
+                return CardList(
+                  movie: movie,
                 );
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final movie = data.watchlistMovies[index];
-                  return CardList(movie: movie);
-                },
-                itemCount: data.watchlistMovies.length,
-              );
-            } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
-            }
-          },
-        ),
+              },
+              itemCount: watchlistMovies.length,
+            );
+          } else if (watchlistState is MovieWatchlistEmpty) {
+            return Center(
+              child: Text('No watchlist movie yet!', style: kBodyText),
+            );
+          } else {
+            return const Center(
+              key: Key('error_message'),
+              child: Text('Failed to fetch data'),
+            );
+          }
+        },
       ),
     );
   }

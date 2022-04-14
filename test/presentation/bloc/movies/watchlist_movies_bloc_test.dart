@@ -6,8 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../dummy_data/dummy_objects.dart';
-import '../../provider/movie_detail_notifier_test.mocks.dart';
-import '../../provider/watchlist_movie_notifier_test.mocks.dart';
+import '../../../helpers/movie_bloc_test_helpers.mocks.dart';
 
 void main() {
   late MockGetWatchlistMovies getWatchlistMovies;
@@ -95,13 +94,13 @@ void main() {
               .thenAnswer((_) async => true);
           return watchlistMoviesBloc;
         },
-        act: (bloc) => bloc.add(FetchWatchlistStatus(testMovieDetail.id)),
+        act: (bloc) => bloc.add(FetchWatchlistStatusMovies(testMovieDetail.id)),
         expect: () => [
           MovieIsAddedToWatchlist(true),
         ],
         verify: (bloc) {
           verify(getWatchlistStatus.execute(testMovieDetail.id));
-          return FetchWatchlistStatus(testMovieDetail.id).props;
+          return FetchWatchlistStatusMovies(testMovieDetail.id).props;
         },
       );
 
@@ -112,13 +111,13 @@ void main() {
               .thenAnswer((_) async => false);
           return watchlistMoviesBloc;
         },
-        act: (bloc) => bloc.add(FetchWatchlistStatus(testMovieDetail.id)),
+        act: (bloc) => bloc.add(FetchWatchlistStatusMovies(testMovieDetail.id)),
         expect: () => [
           MovieIsAddedToWatchlist(false),
         ],
         verify: (bloc) {
           verify(getWatchlistStatus.execute(testMovieDetail.id));
-          return FetchWatchlistStatus(testMovieDetail.id).props;
+          return FetchWatchlistStatusMovies(testMovieDetail.id).props;
         },
       );
     },

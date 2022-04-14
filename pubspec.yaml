@@ -29,7 +29,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.3
-  provider: ^5.0.0
   dartz: ^0.10.0-nullsafety.2
   equatable: ^2.0.2
   google_fonts: ^2.1.0
@@ -41,6 +40,8 @@ dependencies:
   test_cov_console: ^0.2.2
   firebase_core: ^1.14.0
   firebase_crashlytics: ^2.2.4
+  flutter_bloc: ^8.0.1
+  mocktail: ^0.3.0
 
   about:
     path: about
@@ -48,6 +49,7 @@ dependencies:
 dev_dependencies:
   mockito: ^5.0.8
   build_runner: ^2.0.4
+  bloc_test: ^9.0.3
   flutter_test:
     sdk: flutter
 
