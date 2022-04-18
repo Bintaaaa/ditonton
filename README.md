@@ -1,10 +1,12 @@
-####Continous Integration
+# Ditonton
+
+#### Continous Integration
 [![Codemagic build status](https://api.codemagic.io/apps/6252cfca0f76ba57a772051c/6252cfca0f76ba57a772051b/status_badge.svg)](https://codemagic.io/apps/6252cfca0f76ba57a772051c/6252cfca0f76ba57a772051b/latest_build)
 
-##Apa itu Ditonton App?
+## Apa itu Ditonton App?
 Ditonton App adalah aplikasi yang menampilkan daftar dari film-film terbaru. Ditonton juga sebagai syarat kelulusan dalam kelas **Menjadi Flutter Expert Dicoding Indonesia**.
 
-##Apa saja kriteria yang terpenuhi?
+## Apa saja kriteria yang terpenuhi?
 - Clean Architecture
 - Consume API
 - Unit Testing
@@ -14,19 +16,19 @@ Ditonton App adalah aplikasi yang menampilkan daftar dari film-film terbaru. Dit
 - Firebase Analytics
 - Firebase Crashlytics
 
-##Gimana cara pakai projectnya?
-
+## Gimana cara pakai projectnya?
+#### Terdapat 2 branch
 - *Submission-1* sebagai branch yang memenuhi kriterea pada submission 1 dan telah 100%
 
 - *Submission-2* sebagai branch yang telah memenuhi kriteria pada submissioan 2 namun masih _belum menerapkan Moduliarization_
 
-####Cara pakai:
+#### Cara pakai:
 1. Fork Repository ini
 2. Clone pada local Desktop
 3. Jalankan _flutter pub get_ dan _flutter pub upgrade_
 4. Lalu Run!
 
-##Screenshot Aplikasi
+## Screenshot Aplikasi
 
 | Firebase Crashlytics | Firebase Analytics |
 |----------------------|--------------------|
