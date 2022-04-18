@@ -1,5 +1,3 @@
-# Ditonton
-
 ####Continous Integration
 [![Codemagic build status](https://api.codemagic.io/apps/6252cfca0f76ba57a772051c/6252cfca0f76ba57a772051b/status_badge.svg)](https://codemagic.io/apps/6252cfca0f76ba57a772051c/6252cfca0f76ba57a772051b/latest_build)
 
@@ -17,7 +15,7 @@ Ditonton App adalah aplikasi yang menampilkan daftar dari film-film terbaru. Dit
 - Firebase Crashlytics
 
 ##Gimana cara pakai projectnya?
-####Terdapat 2 branch
+
 - *Submission-1* sebagai branch yang memenuhi kriterea pada submission 1 dan telah 100%
 
 - *Submission-2* sebagai branch yang telah memenuhi kriteria pada submissioan 2 namun masih _belum menerapkan Moduliarization_
